@@ -6,7 +6,9 @@ output:
 ---
 ### Reproducible Research: Peer Assignment 1
 By: Houtsin Diep
+
 github repo with RMarkdown source code: 
+https://github.com/houtsind/RepData_PeerAssessment1/blob/master/PA1_template.Rmd
 
 ## Loading and preprocessing the data
 
@@ -29,6 +31,8 @@ pa1.raw.data <- read.csv("activity.csv")
 2. Process/transform the data (if necessary) into a format suitable for your 
 analysis
 
+The date and time were merged into one field and converted.
+
 
 ```r
 pa1.date <- as.Date(pa1.raw.data$date, format = "%Y-%m-%d")
@@ -45,6 +49,9 @@ colnames(pa1.data.time) <- c("time", "steps")
 ## What is mean total number of steps taken per day?
 
 1. Make a histogram of the total number of steps taken each day
+
+Using ggplot2, the total number of steps per day was aggregated and graphed as
+shown below.
 
 
 ```r
@@ -63,6 +70,8 @@ ggplot(pa1.steps.date, aes(x=date, y=steps)) +
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
 2. Calculate and report the mean and median total number of steps taken per day
+
+The mean and median of steps per date are calculated below.
 
 
 ```r
@@ -90,6 +99,9 @@ of the assignment.
 
 1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) 
 and the average number of steps taken, averaged across all days (y-axis)
+
+Used ggplot2 to graph a line plot for the 5-minutes interval averaged across all 
+days.
 
 
 ```r
@@ -119,6 +131,9 @@ ggplot(pa1.time.mean, aes(x=as.numeric(as.character(interval)), y=mean_value)) +
 2. Which 5-minute interval, on average across all the days in the dataset, 
 contains the maximum number of steps?
 
+Sort the data in descending to obtain interval with highest average number of 
+steps.
+
 
 ```r
 head(arrange(pa1.time.mean,desc(mean_value)),1)
@@ -147,6 +162,9 @@ sum(is.na(pa1.raw.data$steps))
 The strategy does not need to be sophisticated. For example, you could use the 
 mean/median for that day, or the mean for that 5-minute interval, etc.
 
+The mean for each 5-minute interval will be used to fill in any values that are 
+NA.
+
 
 ```r
 pa1.steps.interval <- aggregate(steps ~ interval, pa1.raw.data, mean)
@@ -159,6 +177,8 @@ pa1.data2$steps.x[pa1.data2.isNAindex] <- pa1.data2$steps.y[pa1.data2.isNAindex]
 3. Create a new dataset that is equal to the original dataset but with the 
 missing data filled in.
 
+Carry over key columns to final data frame.
+
 
 ```r
 pa1.data2 <- pa1.data2[,1:3]
@@ -170,6 +190,8 @@ and report the mean and median total number of steps taken per day. Do these
 values differ from the estimates from the first part of the assignment? What is 
 the impact of imputing missing data on the estimates of the total daily number 
 of steps?
+
+Aggregate the data end plot using ggplot2 as a histogram.
 
 
 ```r
@@ -184,6 +206,9 @@ ggplot(pa1.data2.steps.date, aes(x=date, y=steps)) +
 ```
 
 ![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
+
+Calculated the mean and median of the data set with NA values filled in, at an 
+aggregate level, it does not appear to make a large difference.
 
 
 ```r
@@ -209,6 +234,9 @@ round(median(pa1.data2.steps.date$steps))
 1. Create a new factor variable in the dataset with two levels - "weekday" and 
 "weekend" indicating whether a given date is a weekday or weekend day.
 
+Simple function to check weekend and assign all others to weekday. Created
+factor column.
+
 
 ```r
 pa1.data3.steps.date<- cbind(pa1.data2.steps.date,day="")
@@ -225,11 +253,11 @@ pa1.data3 <- pa1.data2
 pa1.data3$day <- as.factor(sapply(pa1.data3$date, day))
 ```
 
-
-
 2. Make a panel plot containing a time series plot (i.e. type = "l") of the 
 5-minute interval (x-axis) and the average number of steps taken, averaged 
 across all weekday days or weekend days (y-axis). 
+
+Plotted two graphs; 1 for weekend, 1 for weekday.
 
 
 ```r
